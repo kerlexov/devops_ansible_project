@@ -1,0 +1,7 @@
+---
+- name: Create users
+  become: true
+  ansible.builtin.user:
+    name: "{{ item.username }}"
+    password: "{{ item.password }}"
+  loop: "{{ users }}"

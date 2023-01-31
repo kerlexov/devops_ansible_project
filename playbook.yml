@@ -1,0 +1,56 @@
+---
+- name: Devops project
+  hosts: hosts
+  vars_files:
+    - vars/users_vars.yml
+  tasks:    
+    # Check for available updates to the VM and if they exist list them. 
+    # Update all packages to the latest version.
+    - name: List and update packages
+      import_tasks: tasks/list_update.yml
+    # Create two users with the details from the task_2.txt file
+    - name: Create two users
+      import_tasks: tasks/create_users.yml
+    # Install the LAMP stack by using PHP7. 
+    # Install the PHP modules listed in the task_3.txt
+          
+    # Configure banner and motd files on test VM:
+    # a. motd should be copied from task_4_motd.txt
+    # b. Create a Jinja2 template to match the banner in task_4_banner.txt
+
+    # Install php 7 and configure PHP configuration files in the default configuration directory
+    # to set the following configuration:
+    # a. memory_limit should be set from 128M to 512M
+    # b. post_max_size should be set from 8M to 256M
+    # c. upload_max_filesize should be set from 2M to 256M
+    # d. max_execution_time should be set from 30 to 300
+    # e. max_input_time should be set from 60 to 1000
+    # f. session.cookie_lifetime should be set from 0 to 1440
+    # g. session.cookie_secure should be set to 1
+    # h. session.cookie_httponly should be set to 1
+    # 6. Configure firewalld to set the public interface to the public zone. It should allow services
+    # mysqld, http and https.
+
+    # Configure firewalld to allow public IPs with /32 prefix from task_7.txt to access the
+    # public interface.
+
+    # Configure the second disk (/dev/sdb) to be added to a volume group with a custom
+    # name, with a logical volume using the max capacity of the volume group. Logical volume
+    # should be mounted to /var/www/html. All the data about LVM configuration should be
+    # passed to the playbook through a file called vars.yaml you will create (VG name, LVM
+    # name, directory name, permissions, SELinux context).
+
+    # Install MySQL and create two users db_admin and wordpress. Grant them all
+    # permissions and set passwords for them and for the root user. Passwords should be
+    # stored inside a vault file you create and encrypt with password redhat. User names
+    # should be passed in from a task_9_users.txt file you will create.
+
+    # Create a role that will test if all the components configured in the previous steps are
+    # working and are configured correctly.
+
+    # Create a role that will install WordPress and redis. WordPress should be stored in
+    # /var/www/html. The owner of that directory should be apache. Directory permissions,
+    # ACLs and default ACLs should reference the apache user as the owner. Redis should be
+    # configured with maxmemory 256mb and maxmemory-policy allkeys-lru. A hash key
+    # called student should be created in redis with two fields name and surname containing
+    # your name and surname.
