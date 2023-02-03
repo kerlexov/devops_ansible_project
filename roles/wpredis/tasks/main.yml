@@ -1,0 +1,136 @@
+---
+- name: Create wordpress database
+  become: true
+  mysql_db:
+    login_host: localhost
+    login_user: root
+    login_password: "{{ mysql_root.password }}"
+    check_implicit_admin: yes
+    name: wordpress
+    state: present
+
+- name: setfacl --default --modify user:webadmin:rwx /var/www
+  become: true
+  acl:
+    path: /var/www/html
+    entity: apache
+    etype: user
+    permissions: rwx
+    state: present
+    default: yes
+
+- name: Unarchive a file that needs to be downloaded (added in 2.0)
+  become: true
+  ansible.builtin.unarchive:
+    src: https://wordpress.org/latest.tar.gz
+    dest: /var/www/html
+    remote_src: yes
+    owner: apache
+    mode: "0744"
+
+- name: Copy file with owner and permission, using symbolic representation
+  become: true
+  command: mv /var/www/html/wordpress/wp-config-sample.php /var/www/html/wordpress/wp-config.php
+
+- name: Change php configuration
+  become: true
+  lineinfile:
+    dest: /var/www/html/wordpress/wp-config.php
+    regexp: "DB_NAME"
+    line: "define( 'DB_NAME', 'wordpress' );"
+
+- name: Change php configuration
+  become: true
+  lineinfile:
+    dest: /var/www/html/wordpress/wp-config.php
+    regexp: "DB_USER"
+    line: "define( 'DB_USER', 'wordpress' );"
+
+- name: Change php configuration
+  become: true
+  lineinfile:
+    dest: /var/www/html/wordpress/wp-config.php
+    regexp: "DB_PASSWORD"
+    line: "define( 'DB_PASSWORD', '{{ item.password }}' );"
+  when: (item.username == "wordpress")
+  loop: "{{ mysql_secret }}"
+
+- name: Add apache virtual host file
+  become: true
+  copy:
+    src: wordpress.conf
+    dest: /etc/httpd/conf.d/wordpress.conf
+    owner: apache
+    mode: "0744"
+
+- name: Allow apache to modify files in /var/www/html/wordpress
+  become: true
+  community.general.sefcontext:
+    target: '/var/www/html/wordpress(/.*)?'
+    setype: httpd_sys_content_t
+    state: present
+
+- name: Apply new SELinux file context to filesystem
+  become: true
+  ansible.builtin.command: restorecon -irv /var/www/html/wordpress
+
+- name: Restart service httpd, also issue daemon-reload to pick up config changes
+  become: true
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: true
+    name: httpd
+
+
+- name: Install redis
+  become: true
+  ansible.builtin.dnf:
+    name: "redis"
+    state: latest
+
+- name: Enable and start redis
+  become: true
+  ansible.builtin.systemd:
+    name: "redis"
+    enabled: true
+    state: started
+
+- name: Change redis host configuration
+  become: true
+  lineinfile:
+    dest: /etc/redis.conf
+    regexp: "bind 127.0.0.1"
+    line: "bind 0.0.0.0"
+
+- name: Change redis maxmemory configuration
+  become: true
+  lineinfile:
+    dest: /etc/redis.conf
+    regexp: "maxmemory <bytes>"
+    line: "maxmemory 268435456"
+
+- name: Change redis maxmemory-policy configuration
+  become: true
+  lineinfile:
+    dest: /etc/redis.conf
+    regexp: "maxmemory-policy"
+    line: "maxmemory-policy allkeys-lru"
+
+- name: Restart service redis, also issue daemon-reload to pick up config changes
+  become: true
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: true
+    name: redis
+
+- name: allow redis via firewalld
+  become: true
+  ansible.posix.firewalld:
+    port: "6379/tcp"
+    permanent: true
+    state: enabled
+    immediate: yes
+
+- name: Set redis student key
+  become: true
+  command: redis-cli HSET student firstname "Karlo" lastname "Bertina"

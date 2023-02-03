@@ -21,10 +21,28 @@
   ansible.builtin.dnf:
     enable_plugin: "php:remi-7.4"
 
+- name: Switch to php:7.4 
+  become: true
+  command: dnf module switch-to php:7.4 -y
+
 # Install lamp packages
 - name: Install packages for lamp stack
   ansible.builtin.include_tasks: tasks/install_package.yml
   loop: "{{ lamp_packages }}"
+
+- name: Restart service php-fpm, also issue daemon-reload to pick up config changes
+  become: true
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: true
+    name: php-fpm
+
+- name: Restart service httpd, also issue daemon-reload to pick up config changes
+  become: true
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: true
+    name: httpd
 
 - name: Install mysql required pip modules
   become: true

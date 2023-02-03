@@ -1,0 +1,13 @@
+---
+# tasks file for checkconfig
+- name: Checking "{{ item }}" service status
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+  register: status
+  with_items:
+  - sshd
+  - firewalld
+  - httpd
+  - php-fpm
+  - mysqld
+  failed_when: not(status.status.ActiveState == "active" and not(status.failed))

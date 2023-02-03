@@ -28,7 +28,12 @@ lamp_packages:
   - php-mbstring
   - php74-php-pecl-memcache
   - php74-php-pecl-msgpack
+  - php74-php-mysqlnd
+  - php-mysqlnd
   - php74-php-pecl-mysql
+  - php74-php-pecl-mysql-xdevapi
+  - php74-php-pdo
+  - php-pdo
   - php-odbc
   - php74-php-pecl-redis5
   - php-soap

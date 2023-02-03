@@ -31,3 +31,14 @@
   become: true
   command: mount {{ storage_vars.device }} {{ storage_vars.directory }}
 
+- name: Dispaly uuid & store in variable
+  command: blkid -s UUID -o value {{ storage_vars.device }}
+  register: uuid_swap
+
+- name: Add the below lines
+  become: true
+  blockinfile:
+    path: /etc/fstab
+    state: present
+    block: |
+      UUID={{ uuid_swap.stdout }}  /var/www/html xfs defaults 0 0 
