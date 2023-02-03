@@ -1,5 +1,6 @@
 ---
-- name: Install {{ package }}
-  yum:
-    name: "{{ package }}"
+- name: Install {{ item }}
+  become: true
+  ansible.builtin.dnf:
+    name: "{{ item }}"
     state: latest

@@ -1,0 +1,40 @@
+---
+- name: Add .my.cnf to user home
+  become: true
+  template:
+    src: my.cnf.j2
+    dest: /root/.my.cnf
+
+- name: MySQL installation
+  become: true
+  mysql_user:
+    host: localhost
+    login_host: localhost
+    login_user: root
+    login_password: ""
+    check_implicit_admin: yes
+    user: root
+    password: "{{ mysql_root.password }}"
+    priv: '*.*:ALL,GRANT'
+    state: present
+
+- name: Add .my.cnf to user home
+  become: true
+  template:
+    src: my.cnf_root.j2
+    dest: /root/.my.cnf
+
+- name: Create two mysql users
+  become: true
+  mysql_user:
+    host: localhost
+    login_host: localhost
+    login_user: root
+    login_password: "{{ mysql_root.password }}"
+    check_implicit_admin: yes
+    name: "{{ item.username }}"
+    password: "{{ item.password }}"
+    priv: '*.*:ALL,GRANT'
+    state: present
+  loop: "{{ mysql_secret }}"
+

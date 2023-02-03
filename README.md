@@ -29,4 +29,4 @@
 
 # Run playbook
 
-    $ ansible-playbook 
+    $ ansible-playbook --ask-vault-pass playbook.yml -vvvv

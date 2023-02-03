@@ -1,0 +1,9 @@
+---
+storage_vars:
+  vg_name: kb_vg
+  lvm_name: kb_lvm
+  device: /dev/sdb
+  directory: /var/www/html
+  permissions: 744
+
+  

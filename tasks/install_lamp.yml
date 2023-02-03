@@ -1,0 +1,43 @@
+---
+# PHP module repo fix
+- name: Install epel repo
+  become: true
+  ansible.builtin.dnf:
+    name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm"
+    state: latest
+    disable_gpg_check: true
+    update_cache: true
+    
+- name: Install remi repo
+  become: true
+  ansible.builtin.dnf:
+    name: "https://rpms.remirepo.net/enterprise/remi-release-8.rpm"
+    state: latest
+    disable_gpg_check: true
+    update_cache: true
+
+- name: Enable remi php7.4
+  become: true
+  ansible.builtin.dnf:
+    enable_plugin: "php:remi-7.4"
+
+# Install lamp packages
+- name: Install packages for lamp stack
+  ansible.builtin.include_tasks: tasks/install_package.yml
+  loop: "{{ lamp_packages }}"
+
+- name: Install mysql required pip modules
+  become: true
+  pip:
+    name:
+      - PyMySQL
+    state: present
+    executable: pip3
+
+# Enable and start lamp services
+- name: Enable and start lamp services
+  ansible.builtin.include_tasks: tasks/enable_service.yml
+  loop: "{{ lamp_services }}"
+
+
+

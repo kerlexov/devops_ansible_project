@@ -1,0 +1,8 @@
+---
+- name: Change php configurations
+  become: true
+  lineinfile:
+    dest: /etc/php.ini
+    regexp: "{{ item.key }} ="
+    line: "{{ item.key }} = {{ item.value }}"
+  loop: "{{ php_config }}"

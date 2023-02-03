@@ -1,3 +1,68 @@
 ---
-packages:
+lamp_packages:
+  - dnf-utils
+  - make
+  - epel-release
+  - javapackages-tools
   - httpd
+  - httpd-tools
+  - ImageMagick
+  - ImageMagick-devel
+  - ImageMagick-perl
+  - php
+  - php-apcu
+  - php-bcmath
+  - php-bz2
+  - php-cgi
+  - php-cli
+  - php-curl
+  - php-devel
+  - php-common
+  - php-fpm
+  - php-gd
+  - php-gmp
+  - php74-php-imap
+  - php74-php-pecl-imagick-im7
+  - php-intl
+  - php-ldap
+  - php-mbstring
+  - php74-php-pecl-memcache
+  - php74-php-pecl-msgpack
+  - php74-php-pecl-mysql
+  - php-odbc
+  - php74-php-pecl-redis5
+  - php-soap
+  - php-zip
+  - php74-php-pecl-http
+  - mysql-server
+  - mysql-devel
+  - python39
+  - python39-devel
+  - python39-pip
+  - gcc
+
+lamp_services:
+  - httpd
+  - php-fpm
+  - mysqld
+
+php_config:
+  - key: memory_limit
+    value: 256M
+  - key: post_max_size
+    value: 128M
+  - key: upload_max_filesize
+    value: 64M
+  - key: max_execution_time
+    value: 60
+  - key: max_input_time
+    value: 120
+  - key: session.cookie_lifetime
+    value: 600
+  - key: session.cookie_secure
+    value: 1
+  - key: session.cookie_httponly
+    value: 1
+  - key: date.timezone
+    value: UTC
+  

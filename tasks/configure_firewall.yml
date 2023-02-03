@@ -1,0 +1,29 @@
+---
+- name: Install firewalld package
+  ansible.builtin.include_tasks: tasks/install_package.yml
+  loop:
+    - firewalld
+    - python3-firewall
+
+- name: Enable firewalld service
+  ansible.builtin.include_tasks: tasks/enable_service.yml
+  loop: 
+    - firewalld
+
+- name: allow services via firewalld
+  become: true
+  ansible.posix.firewalld:
+    service: "{{ item }}"
+    permanent: true
+    state: enabled
+    immediate: yes
+  loop: "{{ firewall_services }}"
+
+- name: allow public ip addresses
+  become: true
+  ansible.posix.firewalld:
+    source: "{{ item }}"
+    permanent: true
+    state: enabled
+    immediate: yes
+  loop: "{{ public_ip }}"

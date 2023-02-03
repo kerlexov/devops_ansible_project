@@ -1,0 +1,33 @@
+---
+# - name: Read device information (always use unit when probing)
+#   become: true
+#   community.general.parted: device={{ storage_vars.device }} unit=MiB
+#   register: dev_info
+
+# - name: Remove all partitions from disk
+#   become: true
+#   community.general.parted:
+#     device: "{{ storage_vars.device }}"
+#     number: '{{ item.num }}'
+#     state: absent
+#   loop: '{{ dev_info.partitions }}'
+
+# - name: Unmount device
+#   become: true
+#   command: umount {{ storage_vars.device }}
+
+- name: Reformat device
+  become: true
+  command: mkfs -t xfs -f {{ storage_vars.device }}
+
+- name: Create a volume group and resize the volume group to the maximum possible
+  become: true
+  community.general.lvg:
+    vg: "{{ storage_vars.vg_name }}"
+    pvs: "{{ storage_vars.device }}"
+    pvresize: true
+
+- name: Mount device to directory
+  become: true
+  command: mount {{ storage_vars.device }} {{ storage_vars.directory }}
+

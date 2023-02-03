@@ -1,0 +1,25 @@
+---
+- name: Copy task_4_motd.txt to /etc/issue.net
+  become: true
+  copy:
+    src: task_4_motd.txt
+    dest: /etc/issue.net
+    owner: devops
+    group: devops
+    mode: u+rw,g-wx,o-rwx
+    
+- name: Configure /etc/motd
+  become: true
+  template:
+    src: motd.j2
+    dest: /etc/motd
+    owner: devops
+    group: devops
+    mode: 0644
+  register: motd_file
+
+- name: Restart ssh when updated
+  ansible.builtin.systemd:
+    name: sshd
+    state: restarted
+  when: motd_file.changed
