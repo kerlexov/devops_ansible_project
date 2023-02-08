@@ -1,25 +1,4 @@
 ---
-# - name: Read device information (always use unit when probing)
-#   become: true
-#   community.general.parted: device={{ storage_vars.device }} unit=MiB
-#   register: dev_info
-
-# - name: Remove all partitions from disk
-#   become: true
-#   community.general.parted:
-#     device: "{{ storage_vars.device }}"
-#     number: '{{ item.num }}'
-#     state: absent
-#   loop: '{{ dev_info.partitions }}'
-
-# - name: Unmount device
-#   become: true
-#   command: umount {{ storage_vars.device }}
-
-- name: Reformat device
-  become: true
-  command: mkfs -t xfs -f {{ storage_vars.device }}
-
 - name: Create a volume group and resize the volume group to the maximum possible
   become: true
   community.general.lvg:
@@ -27,12 +6,27 @@
     pvs: "{{ storage_vars.device }}"
     pvresize: true
 
+- name: Create a logical volume the size of all remaining space in the volume group
+  become: true
+  community.general.lvol:
+    vg: "{{ storage_vars.vg_name }}"
+    lv: "{{ storage_vars.lvm_name }}"
+    size: 100%FREE
+
+- name: Reformat device
+  become: true
+  command: mkfs -t xfs -f /dev/{{ storage_vars.vg_name }}/{{ storage_vars.lvm_name }}
+
+- name: Apply vgchanges
+  become: true
+  command: vgchange -ay
+
 - name: Mount device to directory
   become: true
-  command: mount {{ storage_vars.device }} {{ storage_vars.directory }}
+  command: mount /dev/{{ storage_vars.vg_name }}/{{ storage_vars.lvm_name }} {{ storage_vars.directory }}
 
 - name: Dispaly uuid & store in variable
-  command: blkid -s UUID -o value {{ storage_vars.device }}
+  command: blkid -s UUID -o value /dev/{{ storage_vars.vg_name }}/{{ storage_vars.lvm_name }}
   register: uuid_swap
 
 - name: Add the below lines

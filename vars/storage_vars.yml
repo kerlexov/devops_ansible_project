@@ -4,6 +4,6 @@ storage_vars:
   lvm_name: kb_lvm
   device: /dev/sdb
   directory: /var/www/html
-  permissions: 744
+  permissions: 0744
 
   

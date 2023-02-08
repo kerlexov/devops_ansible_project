@@ -16,10 +16,3 @@
     owner: devops
     group: devops
     mode: 0644
-  register: motd_file
-
-- name: Restart ssh when updated
-  ansible.builtin.systemd:
-    name: sshd
-    state: restarted
-  when: motd_file.changed
