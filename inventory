@@ -1,2 +1,2 @@
 [hosts]
-168.119.184.121 ansible_host=168.119.184.121 ansible_ssh_user=root ansible_ssh_private_key_file=/Users/karlobertina/.ssh/id_rsa_devops_kb
+168.119.184.121 ansible_host=168.119.184.121 ansible_ssh_user=devops ansible_ssh_private_key_file=/Users/karlobertina/.ssh/id_rsa_devops_kb
