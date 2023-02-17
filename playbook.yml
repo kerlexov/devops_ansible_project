@@ -54,10 +54,12 @@
     # passed to the playbook through a file called vars.yaml you will create (VG name, LVM
     # name, directory name, permissions, SELinux context).      
     - name: Check if storage should be configured
+      become: true
       command: vgdisplay
       register: vg
     
     - name: Configure second disk
+      become: true
       import_tasks: tasks/configure_storage.yml
       when: vg.stdout == ""
         
