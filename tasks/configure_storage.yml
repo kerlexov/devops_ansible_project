@@ -26,6 +26,7 @@
   command: mount /dev/{{ storage_vars.vg_name }}/{{ storage_vars.lvm_name }} {{ storage_vars.directory }}
 
 - name: Dispaly uuid & store in variable
+  become: true
   command: blkid -s UUID -o value /dev/{{ storage_vars.vg_name }}/{{ storage_vars.lvm_name }}
   register: uuid_swap
 

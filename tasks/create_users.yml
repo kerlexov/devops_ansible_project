@@ -1,7 +1,13 @@
 ---
+- name: Read users from txt file and return a dictionary
+  community.general.read_csv:
+    path: files/file_2.txt
+  register: createusers
+  delegate_to: localhost
+
 - name: Create users
   become: true
   ansible.builtin.user:
     name: "{{ item.username }}"
-    password: "{{ item.password }}"
-  loop: "{{ users }}"
+    password: "{{ item.hashed_password }}"
+  loop: "{{ createusers.list }}"

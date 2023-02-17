@@ -25,10 +25,9 @@
   become: true
   command: dnf module switch-to php:7.4 -y
 
-# Install lamp packages
 - name: Install packages for lamp stack
   ansible.builtin.include_tasks: tasks/install_package.yml
-  loop: "{{ lamp_packages }}"
+  with_lines: cat files/task_3.txt
 
 - name: Restart service php-fpm, also issue daemon-reload to pick up config changes
   become: true

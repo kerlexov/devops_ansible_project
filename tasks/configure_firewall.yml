@@ -26,4 +26,4 @@
     permanent: true
     state: enabled
     immediate: yes
-  loop: "{{ public_ip }}"
+  with_lines: cat files/task_7.txt

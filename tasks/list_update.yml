@@ -1,12 +1,11 @@
 ---
 - name: List packages
-  ansible.builtin.dnf:
-    list: updates
-  register: result
-
-- name: Update packages
   become: true
-  ansible.builtin.dnf:
-    name: "*"
-    state: latest
-    update_cache: true
+  command: dnf list updates
+
+# - name: Update packages
+#   become: true
+#   ansible.builtin.dnf:
+#     name: "*"
+#     state: latest
+#     update_cache: true

@@ -1,0 +1,3 @@
+username,hashed_password
+readonly,$6$QhiSWjCcy1LDF0OH$VNQNxzeiB1fZUEtydrQ06dkkopHq9endyqO4jp2vACGm/B10NN9/gJiaiIVFcx6pSlLtXWTe93iD9iPhf6c/6.
+admin,$6$yd6NMWVvLjNSspGx$HM2Xktr/CJU21C3rCOaCInU694vyzJg9N8KdkKs5ZGn3e1Y3qn.xmRRx/mdcSyU0lSctWtny4KBmTtHZSJXgh.
