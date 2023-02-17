@@ -1,5 +1,5 @@
 ---
-- name: Devops project Karlo Bertina
+- name: Devops project
   hosts: hosts
   gather_facts: true
   vars_files:
