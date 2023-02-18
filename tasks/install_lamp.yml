@@ -26,8 +26,16 @@
   command: dnf module switch-to php:7.4 -y
 
 - name: Install packages for lamp stack
+  become: true
+  ignore_errors: true
   ansible.builtin.include_tasks: tasks/install_package.yml
   with_lines: cat files/task_3.txt
+
+- name: Install extra for lamp stack
+  become: true
+  ignore_errors: true
+  ansible.builtin.include_tasks: tasks/install_package.yml
+  loop: "{{ lamp_extra }}"
 
 - name: Restart service php-fpm, also issue daemon-reload to pick up config changes
   become: true

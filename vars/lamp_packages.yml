@@ -1,4 +1,51 @@
 ---
+lamp_extra:
+  - dnf-utils
+  - make
+  - epel-release
+  - javapackages-tools
+  - httpd
+  - httpd-tools
+  - ImageMagick
+  - ImageMagick-devel
+  - ImageMagick-perl
+  - php
+  - php-apcu
+  - php-bcmath
+  - php-bz2
+  - php-cgi
+  - php-cli
+  - php-curl
+  - php-devel
+  - php-common
+  - php-fpm
+  - php-gd
+  - php-gmp
+  - php74-php-imap
+  - php74-php-pecl-imagick-im7
+  - php-intl
+  - php-ldap
+  - php-mbstring
+  - php74-php-pecl-memcache
+  - php74-php-pecl-msgpack
+  - php74-php-mysqlnd
+  - php-mysqlnd
+  - php74-php-pecl-mysql
+  - php74-php-pecl-mysql-xdevapi
+  - php74-php-pdo
+  - php-pdo
+  - php-odbc
+  - php74-php-pecl-redis5
+  - php-soap
+  - php-zip
+  - php74-php-pecl-http
+  - mysql-server
+  - mysql-devel
+  - python39
+  - python39-devel
+  - python39-pip
+  - gcc
+  
 lamp_services:
   - httpd
   - php-fpm

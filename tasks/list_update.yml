@@ -1,7 +1,12 @@
 ---
-- name: List packages
+- name: Get packages
   become: true
   command: dnf list updates
+  register: updatables
+
+- name: List packages
+  ansible.builtin.debug:
+    msg: "{{ updatables.stdout }}"
 
 - name: Update packages
   become: true
